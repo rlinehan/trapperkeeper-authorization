@@ -242,6 +242,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Public
 
+(defn authorization-check
+  [request
+   rules
+   allow-header-cert-info]
+  (let [req (add-authinfo request allow-header-cert-info)
+        name (ring/authorized-name req)]
+    (rules/allowed? rules req name)))
+
 (schema/defn wrap-authorization-check :- IFn
   "A ring middleware that checks the request is allowed by the provided rules"
   [handler :- IFn
